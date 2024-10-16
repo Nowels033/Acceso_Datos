@@ -1,6 +1,6 @@
 package inicio_primeros_dias;
 
-import entidades.Producto;
+
 
 import java.io.*;
 import java.util.ArrayList;
