@@ -10,60 +10,58 @@ import java.util.Scanner;
 public class JugadorDAO {
 
 
-    public static void crearJugador(){
+    public static void crearJugador() {
         JugadorDTO jugador = null;
         Scanner sc = new Scanner(System.in);
 
 
-            String nombre = "";
-            String apellidos = "";
-            int edad = 0;
-            int dorsal = 0;
-            String posicion = "";
-            String fNacimiento = "";
-            float estatura = 0;
-            float peso = 0;
-            boolean activo = true;
+        String nombre = "";
+        String apellidos = "";
+        int edad = 0;
+        int dorsal = 0;
+        String posicion = "";
+        String fNacimiento = "";
+        float estatura = 0;
+        float peso = 0;
+        boolean activo = true;
 
-            //do{
-                System.out.println("Introduce el nombre del jugador");
-                nombre = sc.nextLine();
-                System.out.println("Introduce el apellido del jugador : "+nombre);
-                apellidos = sc.nextLine();
-                System.out.println("Introduce la edad del jugador : "+nombre);
-                edad = sc.nextInt();
+        //do{
+        System.out.println("Introduce el nombre del jugador");
+        nombre = sc.nextLine();
+        System.out.println("Introduce el apellido del jugador : " + nombre);
+        apellidos = sc.nextLine();
+        System.out.println("Introduce la edad del jugador : " + nombre);
+        edad = sc.nextInt();
 
-                System.out.println("Introduce el dorsal del jugador : "+nombre);
-                dorsal= sc.nextInt();
-                sc.nextLine();
-                System.out.println("Introduce la posicion donde juega el jugador : "+nombre);
-                posicion = sc.nextLine();
-                System.out.println("Introduce la fecha de nacimiento del jugador : "+nombre);
-                fNacimiento = sc.nextLine();
-                System.out.println("Introduce la estatura del jugador : "+nombre);
-                estatura = sc.nextFloat();
-                System.out.println("Introduce el peso del jugador : "+nombre);
-                peso = sc.nextFloat();
-                sc.nextLine();
-                System.out.println("Introduce si el jugador esta activo : "+nombre);
-                System.out.println("INTRODUCE TRUE / FALSE");
-                activo = sc.nextBoolean();
-                sc.nextLine();
-                int id = JugadorDAO.generarIDDesdeFichero();
+        System.out.println("Introduce el dorsal del jugador : " + nombre);
+        dorsal = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Introduce la posicion donde juega el jugador : " + nombre);
+        posicion = sc.nextLine();
+        System.out.println("Introduce la fecha de nacimiento del jugador : " + nombre);
+        fNacimiento = sc.nextLine();
+        System.out.println("Introduce la estatura del jugador : " + nombre);
+        estatura = sc.nextFloat();
+        System.out.println("Introduce el peso del jugador : " + nombre);
+        peso = sc.nextFloat();
+        sc.nextLine();
+        System.out.println("Introduce si el jugador esta activo : " + nombre);
+        System.out.println("INTRODUCE TRUE / FALSE");
+        activo = sc.nextBoolean();
+        sc.nextLine();
+        int id = JugadorDAO.generarIDDesdeFichero();
 
-                jugador = new JugadorDTO(id,nombre, apellidos, edad, dorsal, posicion, fNacimiento, estatura, peso, activo);
+        jugador = new JugadorDTO(id, nombre, apellidos, edad, dorsal, posicion, fNacimiento, estatura, peso, activo);
 
 
-           // }while(!nombre.matches("[A-Z][a-z]+"));
+        // }while(!nombre.matches("[A-Z][a-z]+"));
 
-        if (JugadorDAO.insertarJugadorFichero(jugador)){
+        if (JugadorDAO.insertarJugadorFichero(jugador)) {
 
             System.out.println("Jugador insertado correctamente en el fichero : jugadores.csv");
-        }
-        else {
+        } else {
             System.out.println("OCURRIO UN PROBLEMA AL INSERTAR EL JUGADOR EN EL FICHERO : jugadores.csv");
         }
-
 
 
     }
@@ -76,8 +74,7 @@ public class JugadorDAO {
             if (!archivo.exists()) {
 
                 fw = new FileWriter("jugadores.csv");
-            }
-            else {
+            } else {
                 fw = new FileWriter("jugadores.csv", true);
             }
         } catch (Exception e) {
@@ -92,6 +89,7 @@ public class JugadorDAO {
             }
         }
     }
+
     public static void generarFicheroIDS() {
 
         FileWriter fw = null;
@@ -100,9 +98,8 @@ public class JugadorDAO {
             if (!archivo.exists()) {
 
                 fw = new FileWriter("IDS.txt");
-                fw.write(0+"\n");
-            }
-            else {
+                fw.write(0 + "\n");
+            } else {
                 fw = new FileWriter("IDS.txt", true);
             }
         } catch (Exception e) {
@@ -118,11 +115,11 @@ public class JugadorDAO {
         }
     }
 
-    public static String generarStringJugador(JugadorDTO jugador){
+    public static String generarStringJugador(JugadorDTO jugador) {
 
-        String jugadorString = String.valueOf(jugador.getIdJugador()) ;
+        String jugadorString = String.valueOf(jugador.getIdJugador());
 
-        jugadorString += "*"+ jugador.getNombre();
+        jugadorString += "*" + jugador.getNombre();
 
         jugadorString += "*" + jugador.getApellidos();
 
@@ -160,14 +157,14 @@ public class JugadorDAO {
                 }
             } catch (Exception e2) {
                 e2.printStackTrace();
-                insertado = false ;
+                insertado = false;
             }
         }
 
         return insertado;
     }
 
-    public static int generarIDDesdeFichero(){
+    public static int generarIDDesdeFichero() {
         int id;
 
         FileWriter fw = null;
@@ -188,7 +185,7 @@ public class JugadorDAO {
                 if (fw != null) {
                     fw.close();
                 }
-                if (fr != null){
+                if (fr != null) {
                     fr.close();
                 }
             } catch (Exception e2) {
@@ -199,7 +196,8 @@ public class JugadorDAO {
 
 
     }
-    public static void leerJugadoresFichero(){
+
+    public static void leerJugadoresFichero() {
 
         FileReader fr = null;
         try {
@@ -222,6 +220,7 @@ public class JugadorDAO {
             }
         }
     }
+
     public static ArrayList<JugadorDTO> meterJugadoresDesdeFicheroEnArrayList() {
 
         JugadorDTO jugador = null;
@@ -235,7 +234,7 @@ public class JugadorDAO {
                 String[] datos = linea.split("\\*");
 
 
-                jugador=new JugadorDTO(Integer.parseInt(datos[0]),datos[1],datos[2],Integer.parseInt(datos[3]),Integer.parseInt(datos[4]),datos[5],datos[6],Float.valueOf(datos[7]),Float.valueOf(datos[8]),Boolean.parseBoolean(datos[9]));
+                jugador = new JugadorDTO(Integer.parseInt(datos[0]), datos[1], datos[2], Integer.parseInt(datos[3]), Integer.parseInt(datos[4]), datos[5], datos[6], Float.valueOf(datos[7]), Float.valueOf(datos[8]), Boolean.parseBoolean(datos[9]));
 
                 System.out.println(jugador.toString());
 
@@ -255,8 +254,8 @@ public class JugadorDAO {
             }
         }
 
-
-return arrayJugadores;
+        System.out.println("JUGADORES CARGADOS CORRECTAMENTE EN EL SISTEMA");
+        return arrayJugadores;
 
     }
 

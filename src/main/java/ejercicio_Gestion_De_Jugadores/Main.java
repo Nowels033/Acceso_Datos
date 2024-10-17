@@ -29,9 +29,9 @@ public class Main {
         //GENERAR FICHEROS
         JugadorDAO.generarFicheroIDS();
         JugadorDAO.generarFicheroJugadores();
-
+        ArrayList<JugadorDTO> arrayJugadores = JugadorDAO.meterJugadoresDesdeFicheroEnArrayList();
         Scanner sc = new Scanner(System.in);
-        ArrayList<JugadorDTO> arrayJugadores;
+
         int op = -1;
 
         do {
