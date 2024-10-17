@@ -2,6 +2,7 @@ package ejercicio_Gestion_De_Jugadores;
 
 public class JugadorDTO {
 
+    private int idJugador;
     private String nombre;
     private String apellidos;
     private int edad;
@@ -12,7 +13,8 @@ public class JugadorDTO {
     private float peso;
     private boolean activo;
 
-    public JugadorDTO(String nombre, String apellidos, int edad, int dorsal, String posicion, String fNacimiento, float estatura, float peso, boolean activo) {
+    public JugadorDTO(int idJugador,String nombre, String apellidos, int edad, int dorsal, String posicion, String fNacimiento, float estatura, float peso, boolean activo) {
+        this.idJugador = idJugador;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.edad = edad;
@@ -24,6 +26,7 @@ public class JugadorDTO {
         this.activo = activo;
     }
     public JugadorDTO() {
+        this.idJugador=JugadorDAO.generarIDDesdeFichero();
         this.nombre = "pruebaNombre";
         this.apellidos = "pruebaApellidos";
         this.edad = 0;
@@ -113,10 +116,15 @@ public class JugadorDTO {
         this.activo = activo;
     }
 
+    public int getIdJugador() {
+        return idJugador;
+    }
+
     @Override
     public String toString() {
         return "Jugador{" +
-                "nombre='" + nombre + '\'' +
+                "idJugador=" + idJugador +
+                ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", edad=" + edad +
                 ", dorsal=" + dorsal +
@@ -127,5 +135,6 @@ public class JugadorDTO {
                 ", activo=" + activo +
                 '}';
     }
+
 
 }
