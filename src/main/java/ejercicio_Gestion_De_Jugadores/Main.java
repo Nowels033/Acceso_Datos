@@ -15,21 +15,29 @@ public class Main {
 
     public static void main(String[] args) {
         JOptionPane.showMessageDialog(null, "Programa de gestion de jugadores");
-        menu();
+       // gestionDeJugadores();
         //filewritter
 
        // JugadorDAO.generarFicheroJugadores();
        // JugadorDAO.generarFicheroIDS();
         //System.out.println(JugadorDAO.generarIDDesdeFichero());
 
+        FileManager fileManager = new FileManager("el_quijote.txt");
+        fileManager.escribirLinea("Hola Mundo");
+        fileManager.leerFichero();
+
     }
 
-    public static void menu() {
+    public static void gestionDeJugadores() {
 
         //GENERAR FICHEROS
         JugadorDAO.generarFicheroIDS();
         JugadorDAO.generarFicheroJugadores();
         ArrayList<JugadorDTO> arrayJugadores = JugadorDAO.meterJugadoresDesdeFicheroEnArrayList();
+        menu(arrayJugadores);
+
+    }
+    public static void menu(ArrayList<JugadorDTO>arrayJugadores){
         Scanner sc = new Scanner(System.in);
 
         int op = -1;
