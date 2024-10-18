@@ -23,8 +23,12 @@ public class Main {
         //System.out.println(JugadorDAO.generarIDDesdeFichero());
 
         FileManager fileManager = new FileManager("el_quijote.txt");
-        fileManager.escribirLinea("Hola Mundo");
         fileManager.leerFichero();
+        fileManager.escribirLinea("Hola Mundo");
+        System.out.println("----------------------");
+        fileManager.leerFichero();
+        fileManager.eliminarContenidoFichero();
+        fileManager.eliminarFichero();
 
     }
 
