@@ -14,30 +14,32 @@ public class Main {
     //fichero CSV de los datos de los jugadores, y una opción para salir.
 
     public static void main(String[] args) {
-        JOptionPane.showMessageDialog(null, "Programa de gestion de jugadores");
+
        // gestionDeJugadores();
         //filewritter
 
-       // JugadorDAO.generarFicheroJugadores();
-       // JugadorDAO.generarFicheroIDS();
-        //System.out.println(JugadorDAO.generarIDDesdeFichero());
 
-        FileManager fileManager = new FileManager("el_quijote.txt");
-        fileManager.leerFichero();
-        fileManager.escribirLinea("Hola Mundo");
-        System.out.println("----------------------");
-        fileManager.leerFichero();
-        fileManager.eliminarContenidoFichero();
-        fileManager.eliminarFichero();
+        gestionDeJugadores();
+
+//        FileManager fileManager = new FileManager("el_quijote.txt");
+//        fileManager.leerFichero();
+//        fileManager.escribirLinea("Hola Mundo");
+//        System.out.println("----------------------");
+//        fileManager.leerFichero();
+//        fileManager.eliminarContenidoFichero();
+//        fileManager.eliminarFichero();
 
     }
 
     public static void gestionDeJugadores() {
 
+        JOptionPane.showMessageDialog(null, "Programa de gestion de jugadores");
+
         //GENERAR FICHEROS
         JugadorDAO.generarFicheroIDS();
         JugadorDAO.generarFicheroJugadores();
-        ArrayList<JugadorDTO> arrayJugadores = JugadorDAO.meterJugadoresDesdeFicheroEnArrayList();
+        //CARGAR JUGADORES DESDE FICHERO EN EL PROGRAMA CON ARRAYLIST
+        ArrayList<JugadorDTO> arrayJugadores = JugadorDAO.cargarJugadoresDesdeFicheroEnArrayList();
         menu(arrayJugadores);
 
     }
@@ -49,9 +51,12 @@ public class Main {
         do {
             System.out.println("---------------MENU---------------------");
             System.out.println("---------1.Dar de alta jugador");
-            System.out.println("---------2.Mostrar todos los jugadores");
+            System.out.println("---------2.Mostrar todos los jugadores en el fichero: jugadores.csv");
             System.out.println("---------3.Cargar Jugadores desde fichero en el programa");
-            System.out.println("---------4. ");
+            System.out.println("---------4.Mostrar Jugadores Ordenados Por Nombre");
+            System.out.println("---------5.Mostrar Jugadores Ordenados Por Edad");
+            System.out.println("---------6.Mostrar Jugadores Ordenados Por ID");
+            System.out.println("---------7.Volver a Generar el Fichero de : jugadores.csv (con los jugadores cargados en el programa)");
             System.out.println("---------0. Salir");
             System.out.println("Ingrese  opcion: ");
 
@@ -70,11 +75,24 @@ public class Main {
                         JugadorDAO.leerJugadoresFichero();
                         break;
                     case 3:
-                        System.out.println("Buscar jugador por nombre");
-                        arrayJugadores=JugadorDAO.meterJugadoresDesdeFicheroEnArrayList();
+                        System.out.println("Cargar Jugadores desde fichero en el programa");
+                        arrayJugadores=JugadorDAO.cargarJugadoresDesdeFicheroEnArrayList();
                         break;
                     case 4:
-                        System.out.println("Eliminar jugador");
+                        System.out.println("Jugadores Ordenados Por Nombre :");
+                        JugadorDAO.mostrarJugadoresOrdenadosPorNombre(arrayJugadores);
+                        break;
+                    case 5:
+                        System.out.println("Jugadores Ordenados Por Edad :");
+                        JugadorDAO.mostrarJugadoresOrdenadosPorEdad(arrayJugadores);
+                        break;
+                    case 6:
+                        System.out.println("Jugadores Ordenados Por ID : ");
+                        JugadorDAO.mostrarJugadoresPorId(arrayJugadores);
+                        break;
+                    case 7:
+                        System.out.println("Volver a Generar el Fichero de : jugadores.csv (con los jugadores cargados en el programa)");
+                        JugadorDAO.volverAGenerarFicheroDeJugadoresDesdeArrayList(arrayJugadores);
                         break;
                     case 0:
                         System.out.println("Saliendo...");

@@ -5,13 +5,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class JugadorDAO {
 
 
     public static void crearJugador() {
-        JugadorDTO jugador = null;
+
         Scanner sc = new Scanner(System.in);
 
 
@@ -45,13 +47,14 @@ public class JugadorDAO {
         System.out.println("Introduce el peso del jugador : " + nombre);
         peso = sc.nextFloat();
         sc.nextLine();
-        System.out.println("Introduce si el jugador esta activo : " + nombre);
-        System.out.println("INTRODUCE TRUE / FALSE");
-        activo = sc.nextBoolean();
-        sc.nextLine();
+//        System.out.println("Introduce si el jugador esta activo : " + nombre);
+//        System.out.println("INTRODUCE TRUE / FALSE");
+//        activo = sc.nextBoolean();
+//        sc.nextLine();
+
         int id = JugadorDAO.generarIDDesdeFichero();
 
-        jugador = new JugadorDTO(id, nombre, apellidos, edad, dorsal, posicion, fNacimiento, estatura, peso, activo);
+        JugadorDTO jugador = new JugadorDTO(id, nombre, apellidos, edad, dorsal, posicion, fNacimiento, estatura, peso, activo);
 
 
         // }while(!nombre.matches("[A-Z][a-z]+"));
@@ -221,7 +224,7 @@ public class JugadorDAO {
         }
     }
 
-    public static ArrayList<JugadorDTO> meterJugadoresDesdeFicheroEnArrayList() {
+    public static ArrayList<JugadorDTO> cargarJugadoresDesdeFicheroEnArrayList() {
 
         JugadorDTO jugador = null;
         ArrayList<JugadorDTO> arrayJugadores = new ArrayList<JugadorDTO>();
@@ -257,6 +260,93 @@ public class JugadorDAO {
         System.out.println("JUGADORES CARGADOS CORRECTAMENTE EN EL SISTEMA");
         return arrayJugadores;
 
+    }
+    public static void mostrarJugadoresOrdenadosPorNombre(ArrayList<JugadorDTO> arrayJugadores) {
+
+       //mostrarJugadoresOrdenadosPorNombre
+
+        Collections.sort(arrayJugadores, new Comparator<JugadorDTO>() {
+            @Override
+            public int compare(JugadorDTO o1, JugadorDTO o2) {
+                return o1.getNombre().compareToIgnoreCase(o2.getNombre());
+            }
+        });
+
+        for (JugadorDTO jugador : arrayJugadores) {
+            System.out.println(jugador.toString());
+        }
+    }
+    public static void mostrarJugadoresOrdenadosPorEdad(ArrayList<JugadorDTO> arrayJugadores) {
+
+        Collections.sort(arrayJugadores, new Comparator<JugadorDTO>() {
+            @Override
+            public int compare(JugadorDTO o1, JugadorDTO o2) {
+                return o1.getEdad() - o2.getEdad();
+            }
+        });
+
+        for (JugadorDTO jugador : arrayJugadores) {
+            System.out.println(jugador.toString());
+        }
+    }
+    public static void mostrarJugadoresPorId(ArrayList<JugadorDTO> arrayJugadores) {
+
+        Collections.sort(arrayJugadores, new Comparator<JugadorDTO>() {
+            @Override
+            public int compare(JugadorDTO o1, JugadorDTO o2) {
+                return o1.getIdJugador() - o2.getIdJugador();
+            }
+        });
+
+        for (JugadorDTO jugador : arrayJugadores) {
+            System.out.println(jugador.toString());
+        }
+    }
+    public static void volverAGenerarFicheroDeJugadoresDesdeArrayList(ArrayList<JugadorDTO> arrayJugadores) {
+
+        FileWriter fw = null;
+        try {
+            File archivo = new File("jugadores.csv");
+            if (!archivo.exists()) {
+                archivo.createNewFile();
+            } else {
+                archivo.delete();
+                archivo.createNewFile();
+            }
+            fw = new FileWriter("jugadores.csv");
+            for (JugadorDTO jugador : arrayJugadores) {
+                fw.write(JugadorDAO.generarStringJugador(jugador) + "\n");
+            }
+            //PONEMOS EL ID DEL ULTIMO JUGADOR CREADO EN EL FICHERO DE IDS PARA SABER DONDE EMPIEZA EL FICHERO DE JUGADORES
+            JugadorDAO.modificarIDFicheroID(arrayJugadores.getLast().getIdJugador());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fw != null) {
+                    fw.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+    public static void modificarIDFicheroID(int id) {
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter("IDS.txt");
+            fw.write(id + "\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fw != null) {
+                    fw.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
     }
 
 }
