@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
     //ESTO ES UNA PRUEBA
-    //ESTOY DESDE INTELIJ IDEA
+    //ESTOY DESDE NETBEANS
     // Realizar un programa en java que permita gestionar los datos de un equipo de baloncesto.
     // Crea un DAO y el DTO correspondiente
     //La app contará con un menu para seleccionar la funcionalidad entre los casos de uso CRUD,
