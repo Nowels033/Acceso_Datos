@@ -26,7 +26,7 @@ public class JugadorDTO {
         this.activo = activo;
     }
     public JugadorDTO() {
-        this.idJugador=JugadorDAO.generarIDDesdeFichero();
+        this.idJugador=JugadorDAO.getIDDesdeFicheroIDSYAumentarID();
         this.nombre = "pruebaNombre";
         this.apellidos = "pruebaApellidos";
         this.edad = 0;

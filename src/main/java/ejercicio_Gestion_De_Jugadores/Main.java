@@ -73,7 +73,7 @@ public class Main {
                         break;
                     case 2:
                         System.out.println("Mostrar todos los jugadores");
-                        JugadorDAO.leerJugadoresFichero();
+                        JugadorDAO.mostarJugadoresDesdeElFichero();
                         break;
                     case 3:
                         System.out.println("Cargar Jugadores desde fichero en el programa");

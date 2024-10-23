@@ -11,6 +11,13 @@ import java.util.Scanner;
 
 public class JugadorDAO {
 
+    public JugadorDAO() {
+        
+        
+    }
+    
+    
+
 
     public static void crearJugador() {
 
@@ -52,7 +59,7 @@ public class JugadorDAO {
 //        activo = sc.nextBoolean();
 //        sc.nextLine();
 
-        int id = JugadorDAO.generarIDDesdeFichero();
+        int id = JugadorDAO.getIDDesdeFicheroIDSYAumentarID();
 
         JugadorDTO jugador = new JugadorDTO(id, nombre, apellidos, edad, dorsal, posicion, fNacimiento, estatura, peso, activo);
 
@@ -143,7 +150,11 @@ public class JugadorDAO {
         return jugadorString;
 
     }
-
+/**
+ * 
+ * @param jugador
+ * @return 
+ */
     public static boolean insertarJugadorFichero(JugadorDTO jugador) {
         FileWriter fw = null;
         boolean insertado = false;
@@ -167,7 +178,7 @@ public class JugadorDAO {
         return insertado;
     }
 
-    public static int generarIDDesdeFichero() {
+    public static int getIDDesdeFicheroIDSYAumentarID() {
         int id;
 
         FileWriter fw = null;
@@ -200,7 +211,7 @@ public class JugadorDAO {
 
     }
 
-    public static void leerJugadoresFichero() {
+    public static void mostarJugadoresDesdeElFichero() {
 
         FileReader fr = null;
         try {
@@ -331,7 +342,7 @@ public class JugadorDAO {
             }
         }
     }
-    public static void modificarIDFicheroID(int id) {
+    private static void modificarIDFicheroID(int id) {
         FileWriter fw = null;
         try {
             fw = new FileWriter("IDS.txt");
