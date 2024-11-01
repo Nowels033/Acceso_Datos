@@ -250,7 +250,7 @@ public class JugadorDAO {
 
                 jugador = new JugadorDTO(Integer.parseInt(datos[0]), datos[1], datos[2], Integer.parseInt(datos[3]), Integer.parseInt(datos[4]), datos[5], datos[6], Float.valueOf(datos[7]), Float.valueOf(datos[8]), Boolean.parseBoolean(datos[9]));
 
-                System.out.println(jugador.toString());
+              //  System.out.println(jugador.toString());
 
 
                 arrayJugadores.add(jugador);
