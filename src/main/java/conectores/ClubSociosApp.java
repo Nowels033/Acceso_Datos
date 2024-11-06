@@ -32,7 +32,7 @@ public class ClubSociosApp {
             System.out.println("---------3.ELIMINAR SOCIO POR ID");
             System.out.println("---------4.VER SOCIOS");
             System.out.println("---------0. Salir");
-            System.out.println("Ingrese  opcion: ");
+            System.out.println("Ingrese opcion: ");
 
             try {
                 op = sc.nextInt();
