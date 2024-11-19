@@ -8,7 +8,7 @@ public class GestionDeUsuariosApp {
     }
     public static void menu() {
 
-        User usuario = new User("Alumno", "123456", "A");
+        User usuario = new User("Alumno", "", "A");
 
         System.out.println(usuario.toString());
 

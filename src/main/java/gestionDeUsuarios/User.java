@@ -1,6 +1,7 @@
 package gestionDeUsuarios;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
+//import org.apache.commons.codec.binary.Hex;
 import java.util.Arrays;
 
 
@@ -18,13 +19,13 @@ public class User {
 
 
 
-        if (id_userName.length() >= 5 && password.length() >= 5) {
+        if (id_userName.length() >= 5 && password.length() < 5) {
             byte[] bytesOfMessage = null;
             try {
                 bytesOfMessage = password.getBytes("UTF-8");
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 this.passwordMD5 = md.digest(bytesOfMessage);
-                strPasswordMD5 = passwordMD5 + "";
+                strPasswordMD5 = HexTransform.bytesToHex(passwordMD5);
                 this.id_userName = id_userName;
                // this.passwordMD5 = password;
                 this.typeUser = typeUser;
@@ -34,10 +35,6 @@ public class User {
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
-
-
-
-
         } else {
             throw new IllegalArgumentException("El login y la contraseña deben tener al menos 5 caracteres.");
         }
@@ -76,7 +73,7 @@ public class User {
                 MessageDigest md = MessageDigest.getInstance("MD5");
 
                 this.passwordMD5 = md.digest(bytesOfMessage);
-
+                strPasswordMD5 = HexTransform.bytesToHex(passwordMD5);
                 System.out.println("Contraseña cambiada correctamente.");
 
             } catch (UnsupportedEncodingException e) {
@@ -130,7 +127,6 @@ public class User {
                 "id_userName='" + getId_userName() + '\'' +
                 ", passwordMD5='" + Arrays.toString(getPasswordMD5()) + '\'' +
                 ", strPasswordMD5='" + strPasswordMD5 + '\'' +
-
                 ", Hora Ultimo AccesoCorrecto='" + getHoraUltimoAccesoCorrecto() + '\'' +
                 ", Hora Ultimo AccesoErroneo='" + getHoraUltimoAccesoErroneo() + '\'' +
                 ", typeUser='" + getTypeUser() + '\'' +
