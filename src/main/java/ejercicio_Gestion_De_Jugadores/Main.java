@@ -1,6 +1,8 @@
 package ejercicio_Gestion_De_Jugadores;
 
 import javax.swing.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -50,7 +52,15 @@ public class Main {
         int op = -1;
 
         do {
-            System.out.println("---------------MENU---------------------");
+//            try {
+//				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+
+            System.out.println("\n\n---------------MENU---------------------");
             System.out.println("---------1.Dar de alta jugador");
             System.out.println("---------2.Mostrar todos los jugadores en el fichero: jugadores.csv");
             System.out.println("---------3.Cargar Jugadores desde fichero en el programa");

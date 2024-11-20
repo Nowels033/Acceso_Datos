@@ -37,7 +37,7 @@ public class JugadorDAO {
         //do{
         System.out.println("Introduce el nombre del jugador");
         nombre = sc.nextLine();
-        System.out.println("Introduce el apellido del jugador : " + nombre);
+        System.out.println("Introduce el apellido del jugador (" + nombre + "): ");
         apellidos = sc.nextLine();
         System.out.println("Introduce la edad del jugador : " + nombre);
         edad = sc.nextInt();

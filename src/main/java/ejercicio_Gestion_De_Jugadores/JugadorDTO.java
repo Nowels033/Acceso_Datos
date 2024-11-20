@@ -37,10 +37,6 @@ public class JugadorDTO {
         this.peso = 0;
         this.activo = true;
 
-        //popr que dos?
-        //DOS QUE?
-        //constructores para crear objetos sin pasarle datos
-
     }
 
 
