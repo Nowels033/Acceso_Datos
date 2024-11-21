@@ -8,8 +8,7 @@ import java.util.Arrays;
 public class User {
     private String id_userName;
     byte[] passwordMD5 =null;
-    String strPasswordMD5 =null;
-
+    private String strPasswordMD5 =null;
     private String horaUltimoAccesoCorrecto;
     private String horaUltimoAccesoErroneo;
     private String typeUser;
@@ -19,7 +18,7 @@ public class User {
 
 
 
-        if (id_userName.length() >= 5 && password.length() < 5) {
+        if (id_userName.length() >= 5 && password.length() >= 5) {
             byte[] bytesOfMessage = null;
             try {
                 bytesOfMessage = password.getBytes("UTF-8");
@@ -62,7 +61,17 @@ public class User {
         return passwordMD5;
     }
 
+    public void setPasswordMD5(byte[] passwordMD5) {
+        this.passwordMD5 = passwordMD5;
+    }
 
+    public String getStrPasswordMD5() {
+        return strPasswordMD5;
+    }
+
+    public void setStrPasswordMD5(String strPasswordMD5) {
+        this.strPasswordMD5 = strPasswordMD5;
+    }
 
     public void setPasswordMD5(String password) {
         if ( password.length() >= 5) {
