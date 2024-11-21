@@ -1,5 +1,6 @@
 package gestionDeUsuarios;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 //import org.apache.commons.codec.binary.Hex;
 import java.util.Arrays;
@@ -21,16 +22,16 @@ public class User {
         if (id_userName.length() >= 5 && password.length() >= 5) {
             byte[] bytesOfMessage = null;
             try {
-                bytesOfMessage = password.getBytes("UTF-8");
+                bytesOfMessage = password.getBytes(StandardCharsets.UTF_8);
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 this.passwordMD5 = md.digest(bytesOfMessage);
-                strPasswordMD5 = HexTransform.bytesToHex(passwordMD5);
+                String mD5 = HexTransform.bytesToHex(passwordMD5);
+                System.out.println("HASH DE LA PASSWD ===>>>> " + mD5);
+                this.strPasswordMD5 = mD5;
                 this.id_userName = id_userName;
                // this.passwordMD5 = password;
                 this.typeUser = typeUser;
                 //System.out.println("Usuario creado correctamente.");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
@@ -39,6 +40,17 @@ public class User {
         }
 
     }
+    //METODO PARA NO HASHEAR EL HASH MD5
+    public User(String id_userName, String password, String typeUser,boolean noHash) {
+
+
+
+        this.strPasswordMD5 = password;
+        this.id_userName = id_userName;
+        this.typeUser=typeUser;
+
+    }
+
 
     public String getId_userName() {
         return id_userName;
@@ -78,15 +90,13 @@ public class User {
 
             byte[] bytesOfMessage = null;
             try {
-                bytesOfMessage = password.getBytes("UTF-8");
+                bytesOfMessage = password.getBytes(StandardCharsets.UTF_8);
                 MessageDigest md = MessageDigest.getInstance("MD5");
 
                 this.passwordMD5 = md.digest(bytesOfMessage);
                 strPasswordMD5 = HexTransform.bytesToHex(passwordMD5);
                 System.out.println("Contraseña cambiada correctamente.");
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }

@@ -154,7 +154,7 @@ public class UserDTO {
                 while (rs.next()) {
                     // System.out.println("ID : "+rs.getObject("ID")+",Usuario= "+rs.getObject("id_usuario")+", Password= "+rs.getObject("password")+", Ultimo_Acceso_Correcto: "+rs.getObject("hora_ultimo_acceso_correcto")+", Ultimo_Acceso_Fallido: "+rs.getObject("hora_ultimo_acceso_erroneo")+", Tipo de Usuario= "+rs.getObject("type_user")+", Activo= "+rs.getObject("activo"));
 
-                    user = new User((String) rs.getObject("id_usuario"), (String) rs.getObject("password"), (String) rs.getObject("type_user"));
+                    user = new User((String) rs.getObject("id_usuario"), (String) rs.getObject("password"), (String) rs.getObject("type_user"),true);
 
                     users.add(user);
                 }
@@ -201,9 +201,9 @@ public class UserDTO {
                     String strMD5digest = HexTransform.bytesToHex(theMD5digest);
 
 
-                    if (strMD5digest.equalsIgnoreCase(user.getStrPasswordMD5())) {
+                    if (strMD5digest.equals(user.getStrPasswordMD5())) {
                         System.out.println("Contraseña correcta.");
-                        menu(user);
+                        menu(user,users);
                         return;
                     } else {
                         System.out.println("Contraseña incorrecta.");
@@ -224,7 +224,7 @@ public class UserDTO {
 
     }
 
-    public void menu(User user) {
+    public void menu(User user, ArrayList<User> users) {
         Scanner sc = new Scanner(System.in);
         String opcion = "";
         UserDTO gestionDeUsuarios = new UserDTO();
@@ -233,7 +233,7 @@ public class UserDTO {
             System.out.println("1. Ver usuarios");
             System.out.println("2. Crear Usuario");
             System.out.println("3. Cambiar contraseña");
-            System.out.println("-------------------------");
+            System.out.println("4. Borrar Usuario(SOLO ADMIN)");
             System.out.println("-------------------------");
             System.out.println("-------------------------");
             System.out.println("-------------------------");
@@ -263,13 +263,17 @@ public class UserDTO {
                 case "3":
                     gestionDeUsuarios.cambiarPassword(user);
                     break;
+                case "4":
+                    gestionDeUsuarios.borrarUsuarioPorNombreUsuario(users,user);
+                    break;
                 case "0":
+                    System.out.println("FIN");
                     break;
                 default:
                     System.out.println("Opcion no valida");
                     break;
             }
-        } while (opcion.equalsIgnoreCase("0"));
+        } while (!opcion.equalsIgnoreCase("0"));
 
         System.out.println("FIN DE LA SESION");
         gestionDeUsuarios.cerrarConexion();
@@ -295,6 +299,8 @@ public class UserDTO {
             preparedStatement.setString(5, usuarioCreado.getTypeUser());
             preparedStatement.setBoolean(6, usuarioCreado.isActivo());
             preparedStatement.executeUpdate();
+            sc.close(); // Cierra el scanner después de usarlo
+            preparedStatement.close(); // Cierra el PreparedStatement después de usarlo
         } catch (SQLException ex) {
             Logger.getLogger(UserDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -306,38 +312,85 @@ public class UserDTO {
         System.out.println("INTODUCIR NUEVA CONTRASEÑA");
         Scanner sc = new Scanner(System.in);
         String passIntroducido = sc.nextLine();
-        System.out.println("VUELVE A INTRODUCIR NUEVA CONTRASEÑA");
-        String repiteNewPass = sc.nextLine();
+        if (passIntroducido.length() >= 5) {
+            System.out.println("VUELVE A INTRODUCIR NUEVA CONTRASEÑA");
+            String repiteNewPass = sc.nextLine();
+            if (repiteNewPass.length() >= 5) {
 
-        if (passIntroducido.equals(repiteNewPass)) {
-            {
-                byte[] bytesOfMessage = null;
-                try {
-                    bytesOfMessage = passIntroducido.getBytes("UTF-8");
+                if (passIntroducido.equals(repiteNewPass)) {
+                    {
+                        byte[] bytesOfMessage = null;
+                        try {
+                            bytesOfMessage = passIntroducido.getBytes("UTF-8");
 
-                    MessageDigest md = MessageDigest.getInstance("MD5");
-                    byte[] theMD5digest = md.digest(bytesOfMessage);
-                    String strMD5digest = HexTransform.bytesToHex(theMD5digest);
+                            MessageDigest md = MessageDigest.getInstance("MD5");
+                            byte[] theMD5digest = md.digest(bytesOfMessage);
+                            String strMD5digest = HexTransform.bytesToHex(theMD5digest);
 
-                    PreparedStatement preparedStatement = conn.prepareStatement("UPDATE usuarios SET password = ? WHERE usuarios.id_usuario = ?");
-                    preparedStatement.setString(1, strMD5digest);
-                    preparedStatement.setString(2, user.getId_userName());
-                    preparedStatement.executeUpdate();
+                            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE usuarios SET password = ? WHERE usuarios.id_usuario = ?");
+                            preparedStatement.setString(1, strMD5digest);
+                            preparedStatement.setString(2, user.getId_userName());
+                            preparedStatement.executeUpdate();
 
-                    user.setStrPasswordMD5(strMD5digest);
+                            user.setStrPasswordMD5(strMD5digest);
 
-                    System.out.println("CONTRASEÑA CAMBIADA");
+                            System.out.println("CONTRASEÑA CAMBIADA");
+                            sc.close(); // Cierra el scanner después de usarlo
+                            preparedStatement.close(); // Cierra el PreparedStatement después de usarlo
 
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new RuntimeException(e);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 }
             }
 
+        } else {
+            System.out.println("CONTRASEÑA DEBE DE SER MAYOR DE 5 CARACTERES");
 
+        }
+    }
+
+    public void borrarUsuarioPorNombreUsuario(ArrayList<User> users,User userBD){
+
+        if (userBD.getTypeUser().equalsIgnoreCase("admin")) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("USUARIOS :");
+            verUsuarios();
+            System.out.println("Introduzca el ID del usuario a borrar : ");
+            String idDelete = sc.nextLine();
+
+
+            System.out.println("ESTAS SEGURO QUE DESEA BORRAR EL USUARIO CON ID : [ +"+idDelete+" ]");
+            System.out.println("INTRODUCIR (S) o (N)");
+            String borrar = sc.nextLine();
+            if (borrar.equalsIgnoreCase("S")){
+
+                try {
+                    conn = DriverManager.getConnection("jdbc:mysql://localhost:" + puerto + bD, user, password);
+
+                    if (conn != null) {
+
+                        PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM usuarios WHERE id_usuario = ?");
+                        preparedStatement.setString(1, idDelete);
+                        preparedStatement.executeUpdate();
+                        System.out.println("USUARIO BORRADO");
+
+                    } else {
+                        System.out.println("CONEXION FALLIDA CON LA BASE DE DATOS");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(ClubSociosApp.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }
+        else {
+            System.out.println("NO TIENES PERMISOS PARA BORRAR USUARIOS");
         }
     }
 }
