@@ -135,7 +135,7 @@ public class User {
         return "User{" +
                 "id_userName='" + getId_userName() + '\'' +
                 ", passwordMD5='" + Arrays.toString(getPasswordMD5()) + '\'' +
-                ", strPasswordMD5='" + strPasswordMD5 + '\'' +
+                ", strPasswordMD5='" + getStrPasswordMD5() + '\'' +
                 ", Hora Ultimo AccesoCorrecto='" + getHoraUltimoAccesoCorrecto() + '\'' +
                 ", Hora Ultimo AccesoErroneo='" + getHoraUltimoAccesoErroneo() + '\'' +
                 ", typeUser='" + getTypeUser() + '\'' +

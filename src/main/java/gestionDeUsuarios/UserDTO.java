@@ -176,52 +176,47 @@ public class UserDTO {
     }
 
     public void login() {
-
         ArrayList<User> users = recuperarUsuarios(this.conn);
         Scanner sc = new Scanner(System.in);
         String userIntroducido;
         String passIntroducido;
 
-        System.out.println("Introduce tu nombre de Usuario : ");
+        System.out.println("Introduce tu nombre de Usuario: ");
         userIntroducido = sc.nextLine();
 
+        boolean usuarioEncontrado = false;
 
-        for (int i = 0; i < users.size(); i++) {
-            if (userIntroducido.equals(users.get(i).getId_userName())) {
-                System.out.println("Usuario correcto [" + users.get(i).getId_userName() + "]");
-                System.out.println("Introduce tu password : ");
+        for (User user : users) {
+            if (userIntroducido.equals(user.getId_userName())) {
+                usuarioEncontrado = true;
+                System.out.println("Usuario correcto [" + user.getId_userName() + "]");
+                System.out.println("Introduce tu password: ");
                 passIntroducido = sc.nextLine();
 
-                byte[] bytesOfMessage = null;
                 try {
-                    bytesOfMessage = passIntroducido.getBytes("UTF-8");
 
+                    byte[] bytesOfMessage = passIntroducido.getBytes("UTF-8");
                     MessageDigest md = MessageDigest.getInstance("MD5");
                     byte[] theMD5digest = md.digest(bytesOfMessage);
                     String strMD5digest = HexTransform.bytesToHex(theMD5digest);
 
-                    for (int j = 0; j < users.size(); j++) {
-                        if (strMD5digest.equals(users.get(j).getStrPasswordMD5())) {
-                            System.out.println("Contraseña correcta ");//["+users.get(j).getStrPasswordMD5()+"]");
 
-
-                            //AQUI EL MENU!!
-                            //crearUsuario();
-                            menu(users.get(i));
-                        } else {
-                            System.out.println("Contraseña incorrecta");
-                        }
+                    if (strMD5digest.equalsIgnoreCase(user.getStrPasswordMD5())) {
+                        System.out.println("Contraseña correcta.");
+                        menu(user);
+                        return;
+                    } else {
+                        System.out.println("Contraseña incorrecta.");
                     }
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
+                } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+                    throw new RuntimeException("Error al procesar la contraseña.", e);
                 }
-
             }
         }
 
-
+        if (!usuarioEncontrado) {
+            System.out.println("Usuario no encontrado.");
+        }
     }
 
     public static void logout() {
@@ -314,7 +309,7 @@ public class UserDTO {
         System.out.println("VUELVE A INTRODUCIR NUEVA CONTRASEÑA");
         String repiteNewPass = sc.nextLine();
 
-        if (!passIntroducido.equals(repiteNewPass)) {
+        if (passIntroducido.equals(repiteNewPass)) {
             {
                 byte[] bytesOfMessage = null;
                 try {
@@ -324,7 +319,7 @@ public class UserDTO {
                     byte[] theMD5digest = md.digest(bytesOfMessage);
                     String strMD5digest = HexTransform.bytesToHex(theMD5digest);
 
-                    PreparedStatement preparedStatement = conn.prepareStatement("UPDATE usuarios SET password = ? WHERE id_usuario = ?");
+                    PreparedStatement preparedStatement = conn.prepareStatement("UPDATE usuarios SET password = ? WHERE usuarios.id_usuario = ?");
                     preparedStatement.setString(1, strMD5digest);
                     preparedStatement.setString(2, user.getId_userName());
                     preparedStatement.executeUpdate();
