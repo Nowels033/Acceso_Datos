@@ -28,7 +28,7 @@ public class User {
                 this.id_userName = id_userName;
                // this.passwordMD5 = password;
                 this.typeUser = typeUser;
-                System.out.println("Usuario creado correctamente.");
+                //System.out.println("Usuario creado correctamente.");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (NoSuchAlgorithmException e) {
