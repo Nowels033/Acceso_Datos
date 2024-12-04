@@ -40,7 +40,7 @@ public class DataBaseConnection {
                 conn.close();
                 System.out.println("CONEXION TERMINADA CON LA BD : " + this.bD);
             } catch (SQLException ex) {
-                Logger.getLogger(UserDTO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

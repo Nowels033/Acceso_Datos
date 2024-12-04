@@ -18,7 +18,7 @@ public class GestionUsuariosApp {
 	            String password = sc.nextLine();
 
 	            if (usuarioServicio.iniciarSesion(idUsuario, password)) {
-	                System.out.println("Inicio de sesiun validado. ¡Bienvenido!");
+	                System.out.println("Inicio de sesiun validado. Bienvenido!");
 	                usuarioAutenticado = true;
 	            } else {
 	                System.out.println("Usuario o contraseña incorrectos. Intente de nuevo.");

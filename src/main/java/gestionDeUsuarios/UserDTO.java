@@ -1,232 +1,155 @@
 package gestionDeUsuarios;
-
-import conectores.ClubSociosApp;
-import conectores.ConsultasSQL;
-
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+//import org.apache.commons.codec.binary.Hex;
+import java.util.Arrays;
+
 
 public class UserDTO {
-	 static DataBaseConnection connectionBD = new DataBaseConnection();
-	
+    private String id_userName;
+    byte[] passwordMD5 =null;
+    private String strPasswordMD5 =null;
+    private String horaUltimoAccesoCorrecto;
+    private String horaUltimoAccesoErroneo;
+    private String typeUser;
+    private boolean activo = true;
 
-	public UserDTO() {
-
-	}
-
-
-
-	private static final String SQL_SELECT_ALL = "SELECT * FROM usuarios";
-
-	public void selectAll() {
-		try {
-			System.out.println("SELECT * FROM usuarios");
-			connectionBD.getConn().prepareStatement(SQL_SELECT_ALL).executeQuery();
-		} catch (SQLException ex) {
-			Logger.getLogger(UserDTO.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	public void verUsuarios() {
-
-		if (connectionBD.getConn() != null) {
-
-			try {
-
-				String query = "SELECT * FROM usuarios; ";
-				PreparedStatement preparedStatement = connectionBD.getConn().prepareStatement(query);
-
-				System.out.println("CONSULTA ====> " + preparedStatement.toString());
-				ResultSet rs = preparedStatement.executeQuery();
-				while (rs.next()) {
-					System.out.println("ID : " + rs.getObject("ID") + ",Usuario= " + rs.getObject("id_usuario")
-							+ ", Password= " + rs.getObject("password") + ", Ultimo_Acceso_Correcto: "
-							+ rs.getObject("hora_ultimo_acceso_correcto") + ", Ultimo_Acceso_Fallido: "
-							+ rs.getObject("hora_ultimo_acceso_erroneo") + ", Tipo de Usuario= "
-							+ rs.getObject("type_user") + ", Activo= " + rs.getObject("activo"));
-				}
-
-				preparedStatement.close();
-
-			} catch (SQLException ex) {
-				Logger.getLogger(ConsultasSQL.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				// cerrarConexion();
-			}
-
-		}
-
-	}
-
-	public static ArrayList<User> recuperarUsuarios(Connection conn) {
-		ArrayList<User> users = new ArrayList<>();
-		User user = null;
-
-		if (connectionBD.getConn() != null) {
-
-			try {
-
-				String query = "SELECT * FROM usuarios; ";
-				PreparedStatement preparedStatement = conn.prepareStatement(query);
-
-				System.out.println("CONSULTA ====> " + preparedStatement.toString());
-				ResultSet rs = preparedStatement.executeQuery();
-				while (rs.next()) {
-					// System.out.println("ID : "+rs.getObject("ID")+",Usuario=
-					// "+rs.getObject("id_usuario")+", Password= "+rs.getObject("password")+",
-					// Ultimo_Acceso_Correcto: "+rs.getObject("hora_ultimo_acceso_correcto")+",
-					// Ultimo_Acceso_Fallido: "+rs.getObject("hora_ultimo_acceso_erroneo")+", Tipo
-					// de Usuario= "+rs.getObject("type_user")+", Activo= "+rs.getObject("activo"));
-
-					user = new User((String) rs.getObject("id_usuario"), (String) rs.getObject("password"),
-							(String) rs.getObject("type_user"), true);
-
-					users.add(user);
-				}
-
-				preparedStatement.close();
-
-			} catch (SQLException ex) {
-				Logger.getLogger(ConsultasSQL.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-
-			}
-
-		}
-		for (int i = 0; i < users.size(); i++) {
-			System.out.println(users.get(i).toString());
-		}
-		return users;
-	}
+    public UserDTO(String id_userName, String password, String typeUser) {
 
 
-	public void crearUsuario() {
-		Scanner sc = new Scanner(System.in);
 
-		System.out.println("Introduce tu nombre de Usuario : ");
-		String userIntroducido = sc.nextLine();
-		System.out.println("Introduce tu password : ");
-		String passIntroducido = sc.nextLine();
+        if (id_userName.length() >= 5 && password.length() >= 5) {
+            byte[] bytesOfMessage = null;
+            try {
+                bytesOfMessage = password.getBytes(StandardCharsets.UTF_8);
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                this.passwordMD5 = md.digest(bytesOfMessage);
+                String mD5 = HexTransform.bytesToHex(passwordMD5);
+                System.out.println("HASH DE LA PASSWD ===>>>> " + mD5);
+                this.strPasswordMD5 = mD5;
+                this.id_userName = id_userName;
+               // this.passwordMD5 = password;
+                this.typeUser = typeUser;
+                //System.out.println("Usuario creado correctamente.");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IllegalArgumentException("El login y la contraseña deben tener al menos 5 caracteres.");
+        }
 
-		User usuarioCreado = new User(userIntroducido, passIntroducido, "Solo Lectura");
+    }
+    //METODO PARA NO HASHEAR EL HASH MD5
+    public UserDTO(String id_userName, String password, String typeUser,boolean noHash) {
 
-		try {
-			PreparedStatement preparedStatement = connectionBD.getConn().prepareStatement(
-					"INSERT INTO usuarios (id_usuario, password, hora_ultimo_acceso_correcto, hora_ultimo_acceso_erroneo, type_user, activo) VALUES (?,?,?,?,?,?)");
-			preparedStatement.setString(1, usuarioCreado.getId_userName());
-			preparedStatement.setString(2, usuarioCreado.getStrPasswordMD5());
-			preparedStatement.setDate(3, null);
-			preparedStatement.setDate(4, null);
-			preparedStatement.setString(5, usuarioCreado.getTypeUser());
-			preparedStatement.setBoolean(6, usuarioCreado.isActivo());
-			preparedStatement.executeUpdate();
-			sc.close();
-			preparedStatement.close();
-		} catch (SQLException ex) {
-			Logger.getLogger(UserDTO.class.getName()).log(Level.SEVERE, null, ex);
-		}
 
-	}
 
-	public void cambiarPassword(User user) {
+        this.strPasswordMD5 = password;
+        this.id_userName = id_userName;
+        this.typeUser=typeUser;
 
-		System.out.println("INTODUCIR NUEVA CONTRASEÑA");
-		Scanner sc = new Scanner(System.in);
-		String passIntroducido = sc.nextLine();
-		if (passIntroducido.length() >= 5) {
-			System.out.println("VUELVE A INTRODUCIR NUEVA CONTRASEÑA");
-			String repiteNewPass = sc.nextLine();
-			if (repiteNewPass.length() >= 5) {
+    }
 
-				if (passIntroducido.equals(repiteNewPass)) {
-					{
-						byte[] bytesOfMessage = null;
-						try {
-							bytesOfMessage = passIntroducido.getBytes("UTF-8");
 
-							MessageDigest md = MessageDigest.getInstance("MD5");
-							byte[] theMD5digest = md.digest(bytesOfMessage);
-							String strMD5digest = HexTransform.bytesToHex(theMD5digest);
+    public String getId_userName() {
+        return id_userName;
+    }
 
-							PreparedStatement preparedStatement = connectionBD.getConn()
-									.prepareStatement("UPDATE usuarios SET password = ? WHERE usuarios.id_usuario = ?");
-							preparedStatement.setString(1, strMD5digest);
-							preparedStatement.setString(2, user.getId_userName());
-							preparedStatement.executeUpdate();
+    public void setId_userName(String id_userName) {
 
-							user.setStrPasswordMD5(strMD5digest);
 
-							System.out.println("CONTRASEÑA CAMBIADA");
-							sc.close();
-							preparedStatement.close();
+        if ( id_userName.length() >= 5) {
 
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						} catch (NoSuchAlgorithmException e) {
-							throw new RuntimeException(e);
-						} catch (SQLException e) {
-							throw new RuntimeException(e);
-						}
-					}
-				}
-			}
+            this.id_userName = id_userName;
+            System.out.println("Nombre de usuario cambiado correctamente.");
 
-		} else {
-			System.out.println("CONTRASEÑA DEBE DE SER MAYOR DE 5 CARACTERES");
+        } else {
+            throw new IllegalArgumentException("El nombre de Usuario deben tener al menos 5 caracteres.");
+        }
+    }
 
-		}
-	}
+    public byte[] getPasswordMD5() {
+        return passwordMD5;
+    }
 
-	public void borrarUsuarioPorNombreUsuario(ArrayList<User> users, User userBD) {
+    public void setPasswordMD5(byte[] passwordMD5) {
+        this.passwordMD5 = passwordMD5;
+    }
 
-		if (userBD.getTypeUser().equalsIgnoreCase("admin")) {
-			Scanner sc = new Scanner(System.in);
-			System.out.println("USUARIOS :");
-			verUsuarios();
-			System.out.println("Introduzca el ID del usuario a borrar : ");
-			String idDelete = sc.nextLine();
+    public String getStrPasswordMD5() {
+        return strPasswordMD5;
+    }
 
-			System.out.println("ESTAS SEGURO QUE DESEA BORRAR EL USUARIO CON ID : [ +" + idDelete + " ]");
-			System.out.println("INTRODUCIR (S) o (N)");
-			String borrar = sc.nextLine();
-			if (borrar.equalsIgnoreCase("S")) {
+    public void setStrPasswordMD5(String strPasswordMD5) {
+        this.strPasswordMD5 = strPasswordMD5;
+    }
 
-				if (connectionBD.getConn() != null) {
+    public void setPasswordMD5(String password) {
+        if ( password.length() >= 5) {
 
-					PreparedStatement preparedStatement;
-					try {
-						preparedStatement = connectionBD.getConn().prepareStatement("DELETE FROM usuarios WHERE id_usuario = ?");
-						preparedStatement.setString(1, idDelete);
-						preparedStatement.executeUpdate();
-						System.out.println("USUARIO BORRADO");
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+            byte[] bytesOfMessage = null;
+            try {
+                bytesOfMessage = password.getBytes(StandardCharsets.UTF_8);
+                MessageDigest md = MessageDigest.getInstance("MD5");
 
-				} else {
-					System.out.println("CONEXION FALLIDA CON LA BASE DE DATOS");
-				}
+                this.passwordMD5 = md.digest(bytesOfMessage);
+                strPasswordMD5 = HexTransform.bytesToHex(passwordMD5);
+                System.out.println("Contraseña cambiada correctamente.");
 
-			}
-		} else {
-			System.out.println("NO TIENES PERMISOS PARA BORRAR USUARIOS");
-		}
-	}
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
 
-	public static DataBaseConnection getConnectionBD() {
-		return connectionBD;
-	}
 
-	public static void setConnectionBD(DataBaseConnection connectionBD) {
-		UserDTO.connectionBD = connectionBD;
-	}
-	
-	
+        } else {
+            throw new IllegalArgumentException("La contraseña deben tener al menos 5 caracteres.");
+        }
+
+    }
+
+    public String getHoraUltimoAccesoCorrecto() {
+        return horaUltimoAccesoCorrecto;
+    }
+
+    public void setHoraUltimoAccesoCorrecto(String horaUltimoAccesoCorrecto) {
+        this.horaUltimoAccesoCorrecto = horaUltimoAccesoCorrecto;
+    }
+
+    public String getHoraUltimoAccesoErroneo() {
+        return horaUltimoAccesoErroneo;
+    }
+
+    public void setHoraUltimoAccesoErroneo(String horaUltimoAccesoErroneo) {
+        this.horaUltimoAccesoErroneo = horaUltimoAccesoErroneo;
+    }
+
+    public String getTypeUser() {
+        return typeUser;
+    }
+
+    public void setTypeUser(String typeUser) {
+        this.typeUser = typeUser;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id_userName='" + getId_userName() + '\'' +
+                ", passwordMD5='" + Arrays.toString(getPasswordMD5()) + '\'' +
+                ", strPasswordMD5='" + getStrPasswordMD5() + '\'' +
+                ", Hora Ultimo AccesoCorrecto='" + getHoraUltimoAccesoCorrecto() + '\'' +
+                ", Hora Ultimo AccesoErroneo='" + getHoraUltimoAccesoErroneo() + '\'' +
+                ", typeUser='" + getTypeUser() + '\'' +
+                ", activo=" + isActivo() +
+                '}';
+    }
 }

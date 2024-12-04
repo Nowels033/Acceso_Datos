@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 
 public class MenuManager {
-	public static ArrayList<User> users = UserDTO.recuperarUsuarios(UserDTO.connectionBD.getConn());	
+	public static ArrayList<UserDTO> userDTOs = UserDAO.recuperarUsuarios(UserDAO.connectionBD.getConn());	
 	
 	
 	
@@ -20,10 +20,10 @@ public class MenuManager {
 
 	}
 
-	public static void menu(User user, ArrayList<User> users) {
+	public static void menu(UserDTO userDTO, ArrayList<UserDTO> userDTOs) {
 	    Scanner sc = new Scanner(System.in);
 	    String opcion = "";
-	    UserDTO gestionDeUsuarios = new UserDTO();
+	    UserDAO gestionDeUsuarios = new UserDAO();
 	    do {
 	        System.out.println("Bienvenido a la gestion de Usuarios");
 	        System.out.println("1. Ver usuarios");
@@ -40,14 +40,14 @@ public class MenuManager {
 	        opcion = sc.nextLine();
 	        switch (opcion) {
 	            case "1":
-	                if (user.getTypeUser().equalsIgnoreCase("admin")) {
+	                if (userDTO.getTypeUser().equalsIgnoreCase("admin")) {
 	                    gestionDeUsuarios.verUsuarios();
 	                } else {
 	                    System.out.println("No tienes permisos de administrador");
 	                }
 	                break;
 	            case "2":
-	                if (user.getTypeUser().equalsIgnoreCase("admin")) {
+	                if (userDTO.getTypeUser().equalsIgnoreCase("admin")) {
 	                    System.out.println("---------2.CREAR USUARIO----------");
 	                    gestionDeUsuarios.crearUsuario();
 	                }
@@ -57,14 +57,14 @@ public class MenuManager {
 
 	                break;
 	            case "3":
-	                gestionDeUsuarios.cambiarPassword(user);
+	                gestionDeUsuarios.cambiarPassword(userDTO);
 	                break;
 	            case "4":
-	                gestionDeUsuarios.borrarUsuarioPorNombreUsuario(users,user);
+	                gestionDeUsuarios.borrarUsuarioPorNombreUsuario(userDTOs,userDTO);
 	                break;
 	            case "0":
 	                System.out.println("FIN");
-	                UserDTO.getConnectionBD().cerrarConexion();
+	                UserDAO.getConnectionBD().cerrarConexion();
 	                break;
 	            default:
 	                System.out.println("Opcion no valida");
@@ -87,10 +87,10 @@ public void login() {
 
 		boolean usuarioEncontrado = false;
 
-		for (User user : users) {
-			if (userIntroducido.equals(user.getId_userName())) {
+		for (UserDTO userDTO : userDTOs) {
+			if (userIntroducido.equals(userDTO.getId_userName())) {
 				usuarioEncontrado = true;
-				System.out.println("Usuario correcto [" + user.getId_userName() + "]");
+				System.out.println("Usuario correcto [" + userDTO.getId_userName() + "]");
 				System.out.println("Introduce tu password: ");
 				passIntroducido = sc.nextLine();
 
@@ -101,9 +101,9 @@ public void login() {
 					byte[] theMD5digest = md.digest(bytesOfMessage);
 					String strMD5digest = HexTransform.bytesToHex(theMD5digest);
 
-					if (strMD5digest.equals(user.getStrPasswordMD5())) {
+					if (strMD5digest.equals(userDTO.getStrPasswordMD5())) {
 						System.out.println("Contraseña correcta.");
-						MenuManager.menu(user, users);
+						MenuManager.menu(userDTO, userDTOs);
 						return;
 					} else {
 						System.out.println("Contraseña incorrecta.");
