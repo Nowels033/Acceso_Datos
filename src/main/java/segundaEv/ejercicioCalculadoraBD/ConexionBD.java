@@ -1,4 +1,4 @@
-package gestionDeUsuarioV2;
+package segundaEv.ejercicioCalculadoraBD;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class ConexionBD {
     private static Connection conn;
-    private static final String URL = "jdbc:mysql://localhost:3306/gestion_usuarios";
+    private static final String URL = "jdbc:mysql://localhost:3306/ejerciciosuma";
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
@@ -16,9 +16,9 @@ public class ConexionBD {
         if (conn == null) {
             try {
                 conn = DriverManager.getConnection(URL, USER, PASSWORD);
-               // System.out.println("Conexion establecida.");
+                // System.out.println("Conexion establecida.");
             } catch (SQLException ex) {
-                Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(gestionDeUsuarioV2.ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return conn;
@@ -28,10 +28,14 @@ public class ConexionBD {
         if (conn != null) {
             try {
                 conn.close();
-               // System.out.println("Conexion cerrada.");
+                // System.out.println("Conexion cerrada.");
             } catch (SQLException ex) {
-                Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(gestionDeUsuarioV2.ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    public static Connection getConn() {
+        return conn;
     }
 }
