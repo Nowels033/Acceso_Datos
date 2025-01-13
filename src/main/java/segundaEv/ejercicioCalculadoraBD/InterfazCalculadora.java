@@ -4,9 +4,11 @@ import java.util.Scanner;
 
 public class InterfazCalculadora {
 
-    public static void menu() {
+    public static void menu(Calculadora calc) {
+        
+
         Scanner sc = new Scanner(System.in);
-        int opcion=0;
+        int opcion;
         do {
             System.out.println("1. SUMAR NUMEROS EN LA BASE DE DATOS \n2. GUARDAR NUMERO EN LA BASE DE DATOS \n3. SALIR");
 
@@ -14,10 +16,10 @@ public class InterfazCalculadora {
 
             switch (opcion) {
                 case 1:
-                    Calculadora.sumar();
+                    calc.sumar();
                     break;
                 case 2:
-                    Calculadora.guardarEnMemoria();
+                calc.guardarEnMemoria();
                     break;
                 case 3:
                     System.out.println("Adios");

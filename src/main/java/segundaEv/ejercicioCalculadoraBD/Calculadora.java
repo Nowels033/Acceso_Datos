@@ -1,10 +1,5 @@
 package segundaEv.ejercicioCalculadoraBD;
 
-import conectores.ConsultasSQL;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +7,8 @@ import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import conectores.ConsultasSQL;
 
 
 public class Calculadora {
@@ -25,7 +22,7 @@ public class Calculadora {
         int num = sc.nextInt();
         int numBD = 0;
 
-        // Utilizamos try-with-resources para manejar la conexión y los recursos
+        
 
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM suma;")) {
@@ -38,6 +35,7 @@ public class Calculadora {
                 }
             }
 
+            //ConexionBD.cerrarConexion();
             System.out.println("EL RESULTADO DEL NUMERO INTRODUCIDO MAS EL QUE ESTA EN LA BD ES : " + (num + numBD));
 
         } catch (SQLException ex) {
@@ -52,8 +50,9 @@ public class Calculadora {
         int num = sc.nextInt();
         int numBD = 0;
 
-        try (Connection conn = ConexionBD.getConexion()) { // Abrir una nueva conexión
-            // Consulta para obtener el valor actual en la BD
+        try (Connection conn = ConexionBD.getConexion()) { 
+
+
             String query = "SELECT * FROM suma;";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
 
@@ -65,17 +64,17 @@ public class Calculadora {
             }
             System.out.println("EL RESULTADO DEL NUMERO INTRODUCIDO MAS EL QUE ESTA EN LA BD ES : " + (num + numBD));
 
-            // Preparar el UPDATE
+           
             PreparedStatement preparedStatement2 = conn.prepareStatement("UPDATE suma SET numero = ? WHERE id = 1");
             preparedStatement2.setInt(1, (numBD + num));
             preparedStatement2.executeUpdate();
 
             System.out.println("NUMERO ACTUALIZADO EN LA BASE DE DATOS");
 
-            // Cerrar recursos automáticamente con try-with-resources
+           
             preparedStatement.close();
             preparedStatement2.close();
-           // conn.close();
+           // ConexionBD.cerrarConexion();
         } catch (SQLException ex) {
             Logger.getLogger(ConsultasSQL.class.getName()).log(Level.SEVERE, null, ex);
         }
