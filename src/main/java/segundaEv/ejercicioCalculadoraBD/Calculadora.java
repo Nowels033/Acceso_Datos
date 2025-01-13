@@ -22,9 +22,9 @@ public class Calculadora {
         int num = sc.nextInt();
         int numBD = 0;
 
-        
-
-        try (Connection conn = ConexionBD.getConexion();
+        Connection conn = null;
+        conn = ConexionBD.getConexion(conn);
+        try (
              PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM suma;")) {
 
             System.out.println("CONSULTA ====> " + preparedStatement.toString());
@@ -35,7 +35,7 @@ public class Calculadora {
                 }
             }
 
-            //ConexionBD.cerrarConexion();
+            conn.close();
             System.out.println("EL RESULTADO DEL NUMERO INTRODUCIDO MAS EL QUE ESTA EN LA BD ES : " + (num + numBD));
 
         } catch (SQLException ex) {
@@ -50,7 +50,9 @@ public class Calculadora {
         int num = sc.nextInt();
         int numBD = 0;
 
-        try (Connection conn = ConexionBD.getConexion()) { 
+        Connection conn = null;
+        conn =  ConexionBD.getConexion(conn);
+        try  {
 
 
             String query = "SELECT * FROM suma;";
@@ -74,7 +76,7 @@ public class Calculadora {
            
             preparedStatement.close();
             preparedStatement2.close();
-           // ConexionBD.cerrarConexion();
+            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(ConsultasSQL.class.getName()).log(Level.SEVERE, null, ex);
         }
