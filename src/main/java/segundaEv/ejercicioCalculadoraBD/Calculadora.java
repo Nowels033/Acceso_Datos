@@ -35,7 +35,7 @@ public class Calculadora {
                 }
             }
 
-            conn.close();
+            ConexionBD.cerrarConexion(conn);
             System.out.println("EL RESULTADO DEL NUMERO INTRODUCIDO MAS EL QUE ESTA EN LA BD ES : " + (num + numBD));
 
         } catch (SQLException ex) {
@@ -76,7 +76,7 @@ public class Calculadora {
            
             preparedStatement.close();
             preparedStatement2.close();
-            conn.close();
+            ConexionBD.cerrarConexion(conn);
         } catch (SQLException ex) {
             Logger.getLogger(ConsultasSQL.class.getName()).log(Level.SEVERE, null, ex);
         }
